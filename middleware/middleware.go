@@ -12,14 +12,21 @@ import (
 var identityKey = "id"
 
 //// Basic Setup and routers config
+type goMiddleware struct {
+	// another stuff , may be needed by middleware
+}
 
-func Cors() gin.HandlerFunc {
+func (m *goMiddleware) CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
 		c.Next()
 	}
 }
-func AuthMiddleware() *jwt.GinJWTMiddleware {
+func InitMiddleware() *goMiddleware {
+	return &goMiddleware{}
+}
+
+func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "test zone",
 		Key:         []byte("secret key"), // Change the secret key before going to staging/production

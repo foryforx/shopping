@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"os"
 	"sync"
 
@@ -18,7 +19,8 @@ var (
 )
 
 type dbconn struct {
-	DB *gorm.DB
+	DB  *gorm.DB
+	SDB *sql.DB
 }
 
 var dbinst *dbconn
@@ -26,7 +28,8 @@ var once sync.Once
 
 func GetDBInstance() *dbconn {
 	once.Do(func() {
-		dbinst = &dbconn{DB: initDb()}
+		d := initDb()
+		dbinst = &dbconn{DB: d, SDB: d.DB()}
 	})
 	return dbinst
 }
@@ -37,6 +40,7 @@ func initDb() *gorm.DB {
 		// path/to/whatever does not exist
 	}
 	db, err := gorm.Open("sqlite3", "./data.db")
+
 	// Display SQL queries
 	db.LogMode(true)
 
