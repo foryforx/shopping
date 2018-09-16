@@ -14,6 +14,7 @@ The shop at any time has a variety of different promotions available. These need
 2.	If you buy 2 shirts, each additional shirt only costs $45.
 3.	If you purchase 3 or more shirts, all ties are half price.
 Current inventory availability and prices
+
 | ItemName  | Stock | Price |
 | ------------- | ------------- | ------------- |
 | Belts  | 10  | $20  |
@@ -22,6 +23,7 @@ Current inventory availability and prices
 | Trousers  | 4  | $70  |
 | Shoes  | 1  | $120  |
 | Ties  | 8  | $20  |
+
 
 
 
