@@ -3,12 +3,36 @@
 
 ## Description
 This is an shopping cart service implementation in Go (Golang)+ Gin projects.
+To create a simple shopping cart service for a small product store and identify, design & implement relevant APIs. 
 
-This project has  4 Domain layer :
+Requirements & User stories
+1.	Add and remove items (with quantities) to the cart
+2.	View the current cart, showing items, quantities and total price with promotions
+Current promotions
+The shop at any time has a variety of different promotions available. These need to be easily changed or added to at any time. Current promotions include:
+1.	If you buy 2 or more trousers, you get 15% off belts and shoes.
+2.	If you buy 2 shirts, each additional shirt only costs $45.
+3.	If you purchase 3 or more shirts, all ties are half price.
+Current inventory availability and prices
+Item Name	Stock	Price
+Belts	10	$20
+Shirts	5	$60
+Suits	2	$300
+Trousers	4	$70
+Shoes	1	$120
+Ties	8	$20
+
+
+This project has  4 Domain layer section :
  * Models Layer 
  * Repository Layer
  * Business logic/Usecase Layer  
  * API/Delivery Layer
+ 
+ 
+ Architecture
+ ![alt text](https://github.com/karuppaiah/shopping/blob/master/architecture.png)
+ 
 
 ### How To Run This Project
 
