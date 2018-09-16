@@ -55,6 +55,20 @@ func (_m *EUsecase) Fetch(ctx context.Context, user string) ([]*model.Cart, erro
 	return r0, r1
 }
 
+// GetTotalCartValue provides a mock function with given fields: m
+func (_m *EUsecase) GetTotalCartValue(m []*model.Cart) float64 {
+	ret := _m.Called(m)
+
+	var r0 float64
+	if rf, ok := ret.Get(0).(func([]*model.Cart) float64); ok {
+		r0 = rf(m)
+	} else {
+		r0 = ret.Get(0).(float64)
+	}
+
+	return r0
+}
+
 // Store provides a mock function with given fields: ctx, a
 func (_m *EUsecase) Store(ctx context.Context, a *model.Cart) (int64, error) {
 	ret := _m.Called(ctx, a)

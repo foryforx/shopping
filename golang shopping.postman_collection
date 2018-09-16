@@ -1,0 +1,272 @@
+{
+	"variables": [],
+	"info": {
+		"name": "golang shopping",
+		"_postman_id": "bc0166e0-df57-8122-cc69-2f18ba78cd22",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/login",
+			"request": {
+				"url": "http://localhost:8080/login",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "kal",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "kal",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/products",
+			"request": {
+				"url": "http://localhost:8080/auth/products",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjEyNTIsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA1NzY1Mn0.YdmHfe52urUe1dMAaAEpOatML2TQ95omAEEbC6YQTm0",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/products",
+			"request": {
+				"url": "http://localhost:8080/auth/products",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjEyNTIsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA1NzY1Mn0.YdmHfe52urUe1dMAaAEpOatML2TQ95omAEEbC6YQTm0",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"name\": \"Belts\", \"stock\": 10, \"price\": 20}"
+				},
+				"description": "Generated from a curl request: \ncurl -i -X POST -H \\\"Content-Type: application/json\\\" -H \\\"Authorization:Bearer $TOKEN\\\"  -d \\\"{ \\\\\"name\\\\\": \\\\\"Belts\\\\\", \\\\\"stock\\\\\": 10, \\\\\"price\\\\\": 20}\\\" http://localhost:8080/auth/products\n"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/cart",
+			"request": {
+				"url": "http://localhost:8080/auth/cart",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjEyNTIsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA1NzY1Mn0.YdmHfe52urUe1dMAaAEpOatML2TQ95omAEEbC6YQTm0",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"prodid\": 3, \"items\": 1  }"
+				},
+				"description": "Generated from a curl request: \ncurl -i -X POST -H \\\"Content-Type: application/json\\\" -H \\\"Authorization:Bearer $TOKEN\\\"  -d \\\"{ \\\\\"prodid\\\\\": 1, \\\\\"items\\\\\": 5  }\\\" http://localhost:8080/auth/cart\n"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/products?id=1",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/auth/products?id=8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"products"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "8",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjEyNTIsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA1NzY1Mn0.YdmHfe52urUe1dMAaAEpOatML2TQ95omAEEbC6YQTm0",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/promotion",
+			"request": {
+				"url": "http://localhost:8080/auth/promotion",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjk1OTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA2NTk5Nn0.XE62RWQ5Cm1A_Ql5snF4reFy72pR31cmjqSZZBqIhOI",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"sprodid\": 4, \"sminqty\": 2 , \"dprodid\": 5, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 15, \"priority\": 1  }"
+				},
+				"description": "Generated from a curl request: \ncurl -i -X POST -H \\\"Content-Type: application/json\\\" -H \\\"Authorization:Bearer $TOKEN\\\"  -d \\\"{ \\\\\"sprodid\\\\\": 4, \\\\\"sminqty\\\\\": 2 , \\\\\"dprodid\\\\\": 2, \\\\\"dminqty\\\\\": 0, \\\\\"disctype\\\\\": \\\\\"P\\\\\",\\\\\"discount\\\\\": 15, \\\\\"priority\\\\\": 1  }\\\" http://localhost:8080/auth/promotion"
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8080/auth/promotion",
+			"request": {
+				"url": "http://127.0.0.1:8080/auth/promotion",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjk1OTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA2NTk5Nn0.XE62RWQ5Cm1A_Ql5snF4reFy72pR31cmjqSZZBqIhOI",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Generated from a curl request: \ncurl -i -X GET -H \\\"Content-Type: application/json\\\" -H \\\"Authorization:Bearer $TOKEN\\\" http://127.0.0.1:8080/auth/promotion"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/auth/promotion?id=5",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/auth/promotion?id=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"promotion"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "2",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwNjk1OTYsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzA2NTk5Nn0.XE62RWQ5Cm1A_Ql5snF4reFy72pR31cmjqSZZBqIhOI",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Generated from a curl request: \ncurl -i -X DELETE  -H \\\"Authorization:Bearer $TOKEN\\\" http://localhost:8080/auth/promotion?id=5"
+			},
+			"response": []
+		},
+		{
+			"name": "CART GET",
+			"request": {
+				"url": "http://127.0.0.1:8080/auth/cart",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcwOTU5NDIsImlkIjoia2FsIiwib3JpZ19pYXQiOjE1MzcwOTIzNDJ9.u376m11m3w3RicTNBSg-ysU8KM2GTjGaDcH6lbg3JUQ",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Generated from a curl request: \ncurl -i -X GET -H \\\"Content-Type: application/json\\\" -H \\\"Authorization:Bearer $TOKEN\\\" http://127.0.0.1:8080/auth/cart"
+			},
+			"response": []
+		}
+	]
+}

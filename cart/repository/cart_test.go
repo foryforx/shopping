@@ -86,3 +86,76 @@ func TestDelete(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, anProductStatus)
 }
+
+func TestUpdate(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	// rows := sqlmock.NewRows([]string{"id", "code", "prodid", "name", "price", "items", "dprice"}).
+	// 	AddRow(1, "admin", 2, "Belts", 20.0, 2, 0)
+
+	query := "UPDATE carts"
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectExec().WithArgs(20.0, 1).WillReturnResult(sqlmock.NewResult(1, 1))
+
+	a := ERepo.NewERepository(db)
+
+	ar := &model.Cart{
+		ID:     1,
+		Name:   "Belts",
+		Price:  29.9,
+		Items:  20,
+		Prodid: 2,
+		Code:   "admin",
+		Dprice: 20.0,
+	}
+	aCart, err := a.Update(context.TODO(), ar)
+	assert.NoError(t, err)
+	assert.NotNil(t, aCart)
+	assert.Equal(t, float64(20.0), aCart.Dprice)
+
+}
+
+func TestFetchPromotionDetailsOfCart(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	rows := sqlmock.NewRows([]string{"id", "sprodid", "sminqty", "dprodid", "dminqty", "disctype", "discount", "priority"}).
+		AddRow(1, 4, 2, 2, 0, "P", 15, 1).
+		AddRow(1, 2, 2, 2, 0, "F", 15, 1)
+
+	query := "SELECT id,sprodid,sminqty,dprodid,dminqty,disctype,discount,priority"
+
+	mock.ExpectQuery(query).WillReturnRows(rows)
+	a := ERepo.NewERepository(db)
+
+	list, err := a.FetchPromotionDetailsForCart(context.TODO(), "admin")
+	assert.NoError(t, err)
+	assert.Len(t, list, 2)
+}
+
+func TestConvertCartDetailsAsMap(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+	rows := sqlmock.NewRows([]string{"id", "code", "prodid", "name", "price", "items", "dprice"}).
+		AddRow(1, "admin", 2, "Belts", 20.0, 2, 0).
+		AddRow(2, "admin", 4, "Shoes", 30.0, 5, 0)
+
+	query := "SELECT id,code,prodid, name,price,items,dprice"
+
+	mock.ExpectQuery(query).WillReturnRows(rows)
+	a := ERepo.NewERepository(db)
+
+	mapCart, err := a.ConvertCartDetailsAsMap(context.TODO(), "admin")
+	assert.NoError(t, err)
+	assert.Len(t, mapCart, 2)
+	assert.Equal(t, mapCart[2].Name, "Belts")
+	assert.Equal(t, mapCart[4].Name, "Shoes")
+}

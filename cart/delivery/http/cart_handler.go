@@ -46,13 +46,14 @@ func (a *HttpCartHandler) Fetch(c *gin.Context) {
 	// fmt.Println("user:", claims["id"].(string))
 	user := claims["id"].(string)
 	listC, err := a.AUsecase.Fetch(ctx, user)
+	total := a.AUsecase.GetTotalCartValue(listC)
 	fmt.Println(listC)
 	fmt.Println("In Fetch")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
 	}
 	fmt.Println("In Fetch")
-	c.JSON(http.StatusOK, gin.H{"Cart": listC})
+	c.JSON(http.StatusOK, gin.H{"Cart": listC, "Total": total})
 }
 func isRequestValid(m *model.Cart) (bool, error) {
 

@@ -16,6 +16,73 @@ import (
 func TestFetch(t *testing.T) {
 	mockCartRepo := new(mocks.ERepository)
 	mockEnt1 := &model.Cart{
+		ID:     1,
+		Name:   "New Belt",
+		Price:  30,
+		Items:  20,
+		Prodid: 2,
+		Code:   "admin",
+		Dprice: 0,
+	}
+	mockEnt2 := &model.Cart{
+		ID:     2,
+		Name:   "New Belt",
+		Price:  100,
+		Items:  20,
+		Prodid: 3,
+		Code:   "admin",
+		Dprice: 0,
+	}
+	mockEnt3 := &model.Cart{
+		ID:     2,
+		Name:   "New Belt",
+		Price:  100,
+		Items:  20,
+		Prodid: 3,
+		Code:   "admin",
+		Dprice: 300,
+	}
+	mockEntMap := map[int](*model.Cart){}
+	mockEntMap[2] = mockEnt1
+	mockEntMap[3] = mockEnt2
+	mockListCart := make([]*model.Cart, 0)
+	mockListCart = append(mockListCart, mockEnt1)
+	mockListCart = append(mockListCart, mockEnt2)
+
+	mockPromo1 := &model.Promotion{
+		ID:       1,
+		Sprodid:  2,
+		Sminqty:  2,
+		Dprodid:  3,
+		Dminqty:  0,
+		Disctype: "P",
+		Discount: 15,
+		Priority: 1,
+	}
+
+	mockListPromotion := make([]*model.Promotion, 0)
+	mockListPromotion = append(mockListPromotion, mockPromo1)
+
+	mockCartRepo.On("Fetch", mock.Anything, mock.Anything).Return(mockListCart, nil)
+	mockCartRepo.On("ConvertCartDetailsAsMap", mock.Anything, mock.Anything).Return(mockEntMap, nil)
+	mockCartRepo.On("FetchPromotionDetailsForCart", mock.Anything, mock.Anything).Return(mockListPromotion, nil)
+	mockCartRepo.On("Update", mock.Anything, mock.Anything).Return(mockEnt3, nil)
+
+	u := usecase.NewEUsecase(mockCartRepo, time.Second*2)
+
+	mockCart, err := u.Fetch(context.TODO(), "admin")
+
+	assert.NoError(t, err)
+	assert.NotNil(t, mockCart)
+	assert.Equal(t, 300.0, mockEntMap[3].Dprice)
+	mockCartRepo.AssertExpectations(t)
+
+}
+
+func TestFetchError(t *testing.T) {
+	mockCartRepo := new(mocks.ERepository)
+	mockEnt1 := &model.Cart{
+		ID:     1,
 		Name:   "New Belt",
 		Price:  29.9,
 		Items:  20,
@@ -24,35 +91,47 @@ func TestFetch(t *testing.T) {
 		Dprice: 0,
 	}
 	mockEnt2 := &model.Cart{
+		ID:     2,
 		Name:   "New Belt",
-		Price:  29.9,
+		Price:  100,
 		Items:  20,
 		Prodid: 3,
 		Code:   "admin",
 		Dprice: 0,
 	}
-
+	mockEnt3 := &model.Cart{
+		ID:     2,
+		Name:   "New Belt",
+		Price:  100,
+		Items:  20,
+		Prodid: 3,
+		Code:   "admin",
+		Dprice: 300,
+	}
+	mockEntMap := map[int](*model.Cart){}
+	mockEntMap[2] = mockEnt1
+	mockEntMap[3] = mockEnt2
 	mockListCart := make([]*model.Cart, 0)
 	mockListCart = append(mockListCart, mockEnt1)
 	mockListCart = append(mockListCart, mockEnt2)
 
-	mockCartRepo.On("Fetch", mock.Anything, mock.Anything).Return(mockListCart, nil)
+	mockPromo1 := &model.Promotion{
+		ID:       1,
+		Sprodid:  2,
+		Sminqty:  2,
+		Dprodid:  3,
+		Dminqty:  0,
+		Disctype: "P",
+		Discount: 15,
+		Priority: 1,
+	}
 
-	u := usecase.NewEUsecase(mockCartRepo, time.Second*2)
-
-	mockCart, err := u.Fetch(context.TODO(), "admin")
-
-	assert.NoError(t, err)
-	assert.NotNil(t, mockCart)
-
-	mockCartRepo.AssertExpectations(t)
-
-}
-
-func TestFetchError(t *testing.T) {
-	mockCartRepo := new(mocks.ERepository)
-
+	mockListPromotion := make([]*model.Promotion, 0)
+	mockListPromotion = append(mockListPromotion, mockPromo1)
 	mockCartRepo.On("Fetch", mock.Anything, mock.AnythingOfType("string")).Return(nil, errors.New("Unexpexted Error"))
+	mockCartRepo.On("ConvertCartDetailsAsMap", mock.Anything, mock.Anything).Return(mockEntMap, nil)
+	mockCartRepo.On("FetchPromotionDetailsForCart", mock.Anything, mock.Anything).Return(mockListPromotion, nil)
+	mockCartRepo.On("Update", mock.Anything, mock.Anything).Return(mockEnt3, nil)
 
 	u := usecase.NewEUsecase(mockCartRepo, time.Second*2)
 
@@ -109,6 +188,38 @@ func TestDelete(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.True(t, a)
+	mockCartRepo.AssertExpectations(t)
+
+}
+
+func TestGetCartTotalValue(t *testing.T) {
+	mockCartRepo := new(mocks.ERepository)
+	mockEnt1 := &model.Cart{
+		ID:     1,
+		Name:   "New Belt",
+		Price:  30,
+		Items:  2,
+		Prodid: 2,
+		Code:   "admin",
+		Dprice: 30,
+	}
+	mockEnt2 := &model.Cart{
+		ID:     2,
+		Name:   "New Belt",
+		Price:  100,
+		Items:  20,
+		Prodid: 3,
+		Code:   "admin",
+		Dprice: 0,
+	}
+	mockListCart := make([]*model.Cart, 0)
+	mockListCart = append(mockListCart, mockEnt1)
+	mockListCart = append(mockListCart, mockEnt2)
+	u := usecase.NewEUsecase(mockCartRepo, time.Second*2)
+
+	a := u.GetTotalCartValue(mockListCart)
+
+	assert.Equal(t, 2030.0, a)
 	mockCartRepo.AssertExpectations(t)
 
 }

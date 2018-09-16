@@ -11,6 +11,29 @@ type ERepository struct {
 	mock.Mock
 }
 
+// ConvertCartDetailsAsMap provides a mock function with given fields: ctx, user
+func (_m *ERepository) ConvertCartDetailsAsMap(ctx context.Context, user string) (map[int]*model.Cart, error) {
+	ret := _m.Called(ctx, user)
+
+	var r0 map[int]*model.Cart
+	if rf, ok := ret.Get(0).(func(context.Context, string) map[int]*model.Cart); ok {
+		r0 = rf(ctx, user)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(map[int]*model.Cart)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, user)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Delete provides a mock function with given fields: ctx, id
 func (_m *ERepository) Delete(ctx context.Context, id int) (bool, error) {
 	ret := _m.Called(ctx, id)
@@ -55,6 +78,29 @@ func (_m *ERepository) Fetch(ctx context.Context, user string) ([]*model.Cart, e
 	return r0, r1
 }
 
+// FetchPromotionDetailsForCart provides a mock function with given fields: ctx, user
+func (_m *ERepository) FetchPromotionDetailsForCart(ctx context.Context, user string) ([]*model.Promotion, error) {
+	ret := _m.Called(ctx, user)
+
+	var r0 []*model.Promotion
+	if rf, ok := ret.Get(0).(func(context.Context, string) []*model.Promotion); ok {
+		r0 = rf(ctx, user)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*model.Promotion)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, user)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Store provides a mock function with given fields: ctx, a
 func (_m *ERepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
 	ret := _m.Called(ctx, a)
@@ -69,6 +115,29 @@ func (_m *ERepository) Store(ctx context.Context, a *model.Cart) (int64, error) 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *model.Cart) error); ok {
 		r1 = rf(ctx, a)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Update provides a mock function with given fields: ctx, ar
+func (_m *ERepository) Update(ctx context.Context, ar *model.Cart) (*model.Cart, error) {
+	ret := _m.Called(ctx, ar)
+
+	var r0 *model.Cart
+	if rf, ok := ret.Get(0).(func(context.Context, *model.Cart) *model.Cart); ok {
+		r0 = rf(ctx, ar)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*model.Cart)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *model.Cart) error); ok {
+		r1 = rf(ctx, ar)
 	} else {
 		r1 = ret.Error(1)
 	}
