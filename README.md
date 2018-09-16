@@ -36,22 +36,22 @@ Postman V2 request: https://github.com/karuppaiah/shopping/blob/master/golang%20
 
 Always get the JWT token and use them in authorization header for response.
 
+```
 
 
 # TODO :
-1. User management
-2. Docker image and publish in hub.docker.com - In progress
-3. GOlang IOC
-4. redis storage for JWT token
-5. Move to Mongo DB
-6. Write more unit testing for more coverage
-7. React frontend
-8. Utilites for message Q like kafka(producer and consumer)
-9. Tree structure for promotion to enable double source product rule
-10. Stress testing scripts
+- [ ]  User management
+- [ ] Docker image and publish in hub.docker.com - In progress
+- [ ] GOlang IOC
+- [ ] redis storage for JWT token
+- [ ] Move to Mongo DB
+- [ ] Write more unit testing for more coverage
+- [ ] React frontend
+- [ ] Utilites for message Q like kafka(producer and consumer)
+- [ ] Tree structure for promotion to enable double source product rule
+- [ ] Stress testing scripts
 
 
 
-```
 
 
