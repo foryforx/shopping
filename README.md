@@ -14,13 +14,15 @@ The shop at any time has a variety of different promotions available. These need
 2.	If you buy 2 shirts, each additional shirt only costs $45.
 3.	If you purchase 3 or more shirts, all ties are half price.
 Current inventory availability and prices
-Item Name	Stock	Price
-Belts	10	$20
-Shirts	5	$60
-Suits	2	$300
-Trousers	4	$70
-Shoes	1	$120
-Ties	8	$20
+| ItemName  | Stock | Price |
+| ------------- | ------------- | ------------- |
+| Belts  | 10  | $20  |
+| Shirts  | 5  | $60  |
+| Suits  | 2  | $300  |
+| Trousers  | 4  | $70  |
+| Shoes  | 1  | $120  |
+| Ties  | 8  | $20  |
+
 
 
 This project has  4 Domain layer section :
@@ -64,7 +66,8 @@ Always get the JWT token and use them in authorization header for response.
 
 
 # TODO :
-- [ ]  User management
+- [ ] Handle existing promotion re-evaluation based on promotion delete
+- [ ] User management
 - [ ] Docker image and publish in hub.docker.com - In progress
 - [ ] GOlang IOC
 - [ ] redis storage for JWT token
