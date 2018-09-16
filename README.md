@@ -5,7 +5,7 @@
 This is an shopping cart service implementation in Go (Golang)+ Gin projects.
 
 This project has  4 Domain layer :
- * Models Layer ----- > DB
+ * Models Layer 
  * Repository Layer
  * Business logic/Usecase Layer  
  * API/Delivery Layer
