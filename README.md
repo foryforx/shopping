@@ -32,6 +32,10 @@ At this time, you will have a new data.db created in root directory. Change the 
 
 Site runs at http://127.0.0.1:8080/ping
 
+Postman V2 request: https://github.com/karuppaiah/shopping/blob/master/golang%20shopping.postman_collection
+
+Always get the JWT token and use them in authorization header for response.
+
 
 ```
 
