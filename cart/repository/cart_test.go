@@ -20,7 +20,7 @@ func TestFetch(t *testing.T) {
 		AddRow(1, "admin", 2, "Belts", 20.0, 2, 0).
 		AddRow(1, "admin", 4, "Shoes", 30.0, 5, 0)
 
-	query := "SELECT id,code,prodid, name,price,items,dprice FROM carts where code =\\?"
+	query := "SELECT id,code,prodid, name,price,items,dprice"
 
 	mock.ExpectQuery(query).WillReturnRows(rows)
 	a := ERepo.NewERepository(db)
@@ -33,7 +33,7 @@ func TestFetch(t *testing.T) {
 func TestStore(t *testing.T) {
 
 	ar := &model.Cart{
-		Name:   "New Belt",
+		Name:   "Belts",
 		Price:  29.9,
 		Items:  20,
 		Prodid: 2,
@@ -45,6 +45,13 @@ func TestStore(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
+
+	rowsProduct := sqlmock.NewRows([]string{"id", "name", "price", "stock"}).AddRow(2, "Belts", 29.9, 30)
+	mock.ExpectQuery("SELECT id, name, price, stock FROM products").WillReturnRows(rowsProduct)
+
+	rowsCart := sqlmock.NewRows([]string{"id", "code", "prodid", "name", "price", "items", "dprice"})
+	mock.ExpectQuery("SELECT id, code, prodid, name, price, items, dprice").WillReturnRows(rowsCart)
+
 	//rows := sqlmock.NewRows([]string{})
 	query := "INSERT  "
 	//query2 := "SELECT id,code,prodid, name,price,items,dprice FROM carts where code = \\? and prodid= \\?"

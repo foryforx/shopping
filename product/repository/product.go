@@ -102,38 +102,3 @@ func (m *productRepository) Delete(ctx context.Context, id int) (bool, error) {
 
 	return true, nil
 }
-
-///PRODUCT model function
-
-// func (m *productRepository) GetProducts() []model.Product {
-
-// 	var products []model.Product
-// 	// SELECT * FROM users
-// 	m.db.Find(&products)
-
-// 	// Display JSON result
-// 	return products
-// }
-
-// func (m *productRepository) SaveProduct(product *model.Product) {
-
-// 	m.db.Create(&product)
-// }
-
-// func (m *productRepository) DeleteProduct(id string) string {
-
-// 	var product model.Product
-// 	fmt.Println("Given id", id)
-// 	m.db.First(&product, id)
-// 	fmt.Println("Product id", product.ID, "Given id", id)
-// 	if strconv.Itoa(product.ID) == id {
-// 		// DELETE FROM users WHERE id = user.Id
-// 		m.db.Delete(&product)
-// 		// For Display JSON result
-// 		return id
-// 	} else {
-// 		// For Display JSON error
-// 		return "0"
-// 	}
-
-// }

@@ -20,7 +20,7 @@ func TestGetProducts(t *testing.T) {
 		AddRow(1, "Belts", 20.0, 10).
 		AddRow(2, "Shirts", 60, 5)
 
-	query := "SELECT id,name,price,stock FROM products LIMIT \\?"
+	query := "SELECT id,name,price,stock"
 
 	mock.ExpectQuery(query).WillReturnRows(rows)
 	a := productRepo.NewProductRepository(db)
@@ -43,7 +43,7 @@ func TestStore(t *testing.T) {
 	}
 	defer db.Close()
 
-	query := "INSERT  product SET name=\\? , price=\\? , stock=\\?"
+	query := "INSERT INTO products "
 	prep := mock.ExpectPrepare(query)
 	prep.ExpectExec().WithArgs(ar.Name, ar.Price, ar.Stock).WillReturnResult(sqlmock.NewResult(12, 1))
 
@@ -61,7 +61,7 @@ func TestDelete(t *testing.T) {
 	}
 	defer db.Close()
 
-	query := "DELETE FROM product WHERE id = \\?"
+	query := "DELETE FROM products WHERE "
 
 	prep := mock.ExpectPrepare(query)
 	prep.ExpectExec().WithArgs(12).WillReturnResult(sqlmock.NewResult(12, 1))

@@ -20,10 +20,10 @@ curl -i -X DELETE  -H "Authorization:Bearer $TOKEN" http://localhost:8080/auth/p
 # curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/cart
 
 # # ADD CART ITEM
-curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 1, \"items\": 5 , \"price\" : 29 }" http://localhost:8080/auth/cart
-curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 2, \"items\": 3 , \"price\" : 29 }" http://localhost:8080/auth/cart
-curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 3, \"items\": 2 , \"price\" : 29 }" http://localhost:8080/auth/cart
-curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 4, \"items\": 2 , \"price\" : 29 }" http://localhost:8080/auth/cart
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 1, \"items\": 5  }" http://localhost:8080/auth/cart
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 2, \"items\": 3  }" http://localhost:8080/auth/cart
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 3, \"items\": 2  }" http://localhost:8080/auth/cart
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"prodid\": 4, \"items\": 2 }" http://localhost:8080/auth/cart
 
 # curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" -d "{  \"prodid\": 1, \"items\": 5 , \"name\" : \"XXX\" , \"price\" : 29 }" http://localhost:8080/auth/cart
 # curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" -d "{  \"prodid\": 2,  \"items\": 3 , \"name\" : \"XXX\" , \"price\" : 29 }" http://localhost:8080/auth/cart
@@ -39,18 +39,18 @@ curl -i -X DELETE  -H "Authorization:Bearer $TOKEN" http://localhost:8080/auth/c
 # curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/cart
 
 # # GET PROMOTION ITEM
-# curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/promotion
+curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/promotion
 # # ADD PROMOTION ITEM
-# curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 4, \"sminqty\": 2 , \"dprodid\": 2, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 15, \"priority\": 1  }" http://localhost:8080/auth/promotion
-# curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 4, \"sminqty\": 2 , \"dprodid\": 5, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 15, \"priority\": 2  }" http://localhost:8080/auth/promotion
-# curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 2, \"sminqty\": 2 , \"dprodid\": 2, \"dminqty\": 2, \"disctype\": \"F\",\"discount\": 15, \"priority\": 3  }" http://localhost:8080/auth/promotion
-# curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 2, \"sminqty\": 3 , \"dprodid\": 6, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 50, \"priority\": 4  }" http://localhost:8080/auth/promotion
-# curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 2, \"sminqty\": 3 , \"dprodid\": 6, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 50, \"priority\": 5  }" http://localhost:8080/auth/promotion
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 4, \"sminqty\": 2 , \"dprodid\": 2, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 15, \"priority\": 1  }" http://localhost:8080/auth/promotion
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 4, \"sminqty\": 2 , \"dprodid\": 5, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 15, \"priority\": 2  }" http://localhost:8080/auth/promotion
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 2, \"sminqty\": 2 , \"dprodid\": 2, \"dminqty\": 2, \"disctype\": \"F\",\"discount\": 15, \"priority\": 3  }" http://localhost:8080/auth/promotion
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 2, \"sminqty\": 3 , \"dprodid\": 6, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 50, \"priority\": 4  }" http://localhost:8080/auth/promotion
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"sprodid\": 2, \"sminqty\": 3 , \"dprodid\": 4, \"dminqty\": 0, \"disctype\": \"P\",\"discount\": 50, \"priority\": 5  }" http://localhost:8080/auth/promotion
 
 
 # # DELETE PROMOTION ITEM
-# curl -i -X DELETE  -H "Authorization:Bearer $TOKEN" http://localhost:8080/auth/promotion?id=5
+curl -i -X DELETE  -H "Authorization:Bearer $TOKEN" http://localhost:8080/auth/promotion?id=5
 
-# curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/promotion
+curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/promotion
 
 

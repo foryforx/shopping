@@ -54,8 +54,8 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 			}
 			userID := loginVals.Username
 			password := loginVals.Password
-
-			if (userID == "admin" && password == "admin") || (userID == "test" && password == "test") {
+			//Authenticate only for specific users as of now. User management later to be done
+			if (userID == "admin" && password == "admin") || (userID == "kal" && password == "kal") || (userID == "james" && password == "james") {
 				return &model.User{
 					UserName:  userID,
 					LastName:  "KAL",
@@ -65,8 +65,9 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 
 			return nil, jwt.ErrFailedAuthentication
 		},
+		//If username is admin/kal/james allow them to proceed
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*model.User); ok && v.UserName == "admin" {
+			if v, ok := data.(*model.User); ok && v.UserName == "admin" || v.UserName == "kal" || v.UserName == "james" {
 				return true
 			}
 

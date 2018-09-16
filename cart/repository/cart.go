@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/karuppaiah/shopping/cart"
@@ -92,19 +93,8 @@ func (m *eRepository) Fetch(ctx context.Context, user string) ([]*model.Cart, er
 }
 
 func (m *eRepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
-	// verifyQuery := `SELECT id,code,prodid, name,price,items,dprice
-	// FROM carts where code = ? and prodid= ?`
-	// list, verifyerr := m.fetch(ctx, verifyQuery, a.Code, a.Prodid)
-	// fmt.Println(verifyerr)
-	// if verifyerr != nil {
-	// 	return 0, errors.New("Invalid request")
-	// }
-	// if len(list) > 0 {
-	// 	return 0, errors.New("Item already exists in cart")
-	// }
-	// get the prooname and price from product
-	prodQuery := `SELECT id, name,price, stock
-						  FROM products where id = ?`
+
+	prodQuery := `SELECT id, name, price, stock FROM products where id = ?`
 	prodItems, err := m.fetchProduct(ctx, prodQuery, a.Prodid)
 
 	if err != nil {
@@ -117,9 +107,13 @@ func (m *eRepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
 	}
 	a.Name = prodItems[0].Name
 	a.Price = prodItems[0].Price
+	if a.Items > prodItems[0].Stock {
+		stockErr := fmt.Errorf("Stock too high")
+		fmt.Println("Stock too much requested")
+		return 0, stockErr
+	}
 	fmt.Println("model:", a.Code, a.Prodid)
-	cartQuery := `SELECT id, code, prodid, name, price, items, dprice
-	FROM carts where code = ? and prodid = ?`
+	cartQuery := `SELECT id, code, prodid, name, price, items, dprice FROM carts where code = ? and prodid = ?`
 	cartItems, cerr := m.fetch(ctx, cartQuery, a.Code, a.Prodid)
 	fmt.Println("modely:", len(cartItems), a.Code, a.Prodid, cerr)
 	if cerr != nil {
@@ -127,8 +121,9 @@ func (m *eRepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
 	}
 
 	if len(cartItems) > 0 {
-		lencErr := fmt.Errorf("Item already exists in cart. Please delete and add again")
-		return 0, lencErr
+		//lencErr := fmt.Errorf("Item already exists in cart. Please delete and add again")
+		fmt.Println("Item already exists in cart. Please delete and add again ")
+		return 0, errors.New("Item already exists in cart. Please delete and add again ")
 	}
 
 	query := `INSERT INTO carts ( code , prodid , name , price , items , dprice ) VALUES ( ? , ? , ? , ? , ? , ? )`
