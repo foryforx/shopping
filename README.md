@@ -5,7 +5,7 @@
 This is an shopping cart service implementation in Go (Golang)+ Gin projects.
 
 This project has  4 Domain layer :
- * Models Layer ----- > DB
+ * Models Layer 
  * Repository Layer
  * Business logic/Usecase Layer  
  * API/Delivery Layer
@@ -31,6 +31,10 @@ sh createData.sh
 At this time, you will have a new data.db created in root directory. Change the DB if needed.
 
 Site runs at http://127.0.0.1:8080/ping
+
+Postman V2 request: https://github.com/karuppaiah/shopping/blob/master/golang%20shopping.postman_collection
+
+Always get the JWT token and use them in authorization header for response.
 
 
 ```
