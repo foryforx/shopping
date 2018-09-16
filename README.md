@@ -66,7 +66,7 @@ Always get the JWT token and use them in authorization header for response.
 
 
 # TODO :
-- [ ] Handle existing promotion re-evaluation based on promotion delete
+- [X] Handle existing promotion re-evaluation based on promotion delete
 - [ ] User management
 - [ ] Docker image and publish in hub.docker.com - In progress
 - [ ] GOlang IOC
