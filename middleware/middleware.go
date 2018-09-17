@@ -7,6 +7,8 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
+	loginRepo "github.com/karuppaiah/shopping/login/repository"
+	loginUcase "github.com/karuppaiah/shopping/login/usecase"
 	"github.com/karuppaiah/shopping/model"
 )
 
@@ -63,22 +65,40 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 			}
 			userID := loginVals.Username
 			password := loginVals.Password
-			//Send the usename and password to User Business logic and verify if its available in DB
-			// call Business logic here
-			// If Business logic return true
-			//		Allow create User object and return
-			// Else
-			//      return nil
-			//Authenticate only for specific users as of now. User management later to be done
-			if (userID == "admin" && password == "admin") || (userID == "kal" && password == "kal") || (userID == "james" && password == "james") {
+			timeoutContext := time.Duration(10) * time.Second
+			db := model.GetDBInstance()
+			loR := loginRepo.NewERepository(db.SDB)
+			loU := loginUcase.NewEUsecase(loR, timeoutContext)
+			mLogin, err := loU.Fetch(c, userID)
+			if len(mLogin) != 1 || err != nil {
+				return nil, jwt.ErrFailedAuthentication
+			}
+			if mLogin[0].Username == userID && mLogin[0].Password == password {
 				return &model.User{
 					UserName:  userID,
 					LastName:  "KAL",
 					FirstName: "KAL",
 				}, nil
 			}
-
 			return nil, jwt.ErrFailedAuthentication
+			//Send the usename to User Business logic and verify if its available in DB
+			// call Business logic here
+			// If Business logic return true
+			//		Allow create User object and return
+			// Else
+			//      return nil
+			//Authenticate only for specific users as of now. User management later to be done
+			// old code start: hardcoded JWT
+			// if (userID == "admin" && password == "admin") || (userID == "kal" && password == "kal") || (userID == "james" && password == "james") {
+			// 	return &model.User{
+			// 		UserName:  userID,
+			// 		LastName:  "KAL",
+			// 		FirstName: "KAL",
+			// 	}, nil
+			// }
+
+			// return nil, jwt.ErrFailedAuthentication
+			// old code end:hardcoded JWT
 		},
 		//If username is admin/kal/james allow them to proceed
 		Authorizator: func(data interface{}, c *gin.Context) bool {
@@ -89,7 +109,21 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 			//  return true
 			// Else
 			// return false
-			if v, ok := data.(*model.User); ok && v.UserName == "admin" || v.UserName == "kal" || v.UserName == "james" {
+			v, ok := data.(*model.User)
+			if !ok {
+				return false
+			}
+			db := model.GetDBInstance()
+			loR := loginRepo.NewERepository(db.SDB)
+			timeoutContext := time.Duration(10) * time.Second
+			loU := loginUcase.NewEUsecase(loR, timeoutContext)
+			fmt.Println("Reqested user:" + v.UserName)
+			mLogin, err := loU.Fetch(c, v.UserName)
+			if len(mLogin) != 1 || err != nil {
+				return false
+			}
+			if v.UserName == mLogin[0].Username {
+				fmt.Println("username mismatch")
 				return true
 			}
 

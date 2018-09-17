@@ -259,7 +259,7 @@
 					},
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcxNTU0NTQsImlkIjoiamFtZXMiLCJvcmlnX2lhdCI6MTUzNzE1MTg1NH0.ThVBEuzYXwgxVQLk4q2WQwgoz4v9U6PexlNjxxkvbdQ",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcxNjE2NTcsImlkIjoiamFtZXMiLCJvcmlnX2lhdCI6MTUzNzE1ODA1N30.pKdBeiDUGR9TMkYsOpw0lYD_uJrHK8neXGapQ0E3j-M",
 						"description": ""
 					}
 				],
@@ -541,6 +541,122 @@
 				],
 				"body": {},
 				"description": "Generated from a curl request: \ncurl -i -X DELETE  -H \\\"Authorization:Bearer $TOKEN\\\" http://localhost:8080/auth/cart?id=6"
+			},
+			"response": []
+		},
+		{
+			"name": "REF TOKEN",
+			"request": {
+				"url": "localhost:8080/auth/refresh_token",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcxNTU0NTQsImlkIjoiamFtZXMiLCJvcmlnX2lhdCI6MTUzNzE1MTg1NH0.ThVBEuzYXwgxVQLk4q2WQwgoz4v9U6PexlNjxxkvbdQ",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET Login",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/auth/login?username=kal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "kal",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcxNjEyMjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzE1NzYyMH0.C6ooPNl8K2lth0srf1UlNI1LMCI5FpZ24jcf0TP3wzQ",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "ADD login",
+			"request": {
+				"url": "http://localhost:8080/auth/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcxNjEyMjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzE1NzYyMH0.C6ooPNl8K2lth0srf1UlNI1LMCI5FpZ24jcf0TP3wzQ",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\":\"kal\",\n\t\"password\":\"kal\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DEL Login",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/auth/login?username=kal",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "kal",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzcxNjEyMjAsImlkIjoiYWRtaW4iLCJvcmlnX2lhdCI6MTUzNzE1NzYyMH0.C6ooPNl8K2lth0srf1UlNI1LMCI5FpZ24jcf0TP3wzQ",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
 			},
 			"response": []
 		}
