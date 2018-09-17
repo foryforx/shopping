@@ -70,8 +70,8 @@ Always get the JWT token and use them in authorization header for response.
 
 # TODO :
 - [X] Handle existing promotion re-evaluation based on promotion delete
-- [ ] User management
-- [ ] Docker image and publish in hub.docker.com - In progress
+- [X] User management and link to JWT
+- [ ] Docker image and publish in hub.docker.com
 - [ ] GOlang IOC
 - [ ] redis storage for JWT token
 - [ ] Move to Mongo DB
