@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -34,26 +35,40 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 		MaxRefresh:  time.Hour,
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			// Called during login after Authenticator
+			fmt.Println("Payloadfunc")
 			if v, ok := data.(*model.User); ok {
 				return jwt.MapClaims{
 					identityKey: v.UserName,
 				}
 			}
+
 			return jwt.MapClaims{}
 		},
 		IdentityHandler: func(c *gin.Context) interface{} {
+			// called for refresh token here and forwarded to authotizator
+			// Called when someone asks for an auth API with token and then moves to authorizator
 			claims := jwt.ExtractClaims(c)
+			fmt.Println("IdentityHandler")
 			return &model.User{
 				UserName: claims["id"].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
+			// Called when we ask for new token with username and pwd
 			var loginVals model.Login
+			fmt.Println("Authenticator")
 			if err := c.ShouldBind(&loginVals); err != nil {
 				return "", jwt.ErrMissingLoginValues
 			}
 			userID := loginVals.Username
 			password := loginVals.Password
+			//Send the usename and password to User Business logic and verify if its available in DB
+			// call Business logic here
+			// If Business logic return true
+			//		Allow create User object and return
+			// Else
+			//      return nil
 			//Authenticate only for specific users as of now. User management later to be done
 			if (userID == "admin" && password == "admin") || (userID == "kal" && password == "kal") || (userID == "james" && password == "james") {
 				return &model.User{
@@ -67,6 +82,13 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 		},
 		//If username is admin/kal/james allow them to proceed
 		Authorizator: func(data interface{}, c *gin.Context) bool {
+			// Called when someone asks for an auth API with token| called from IdentityHandler
+			fmt.Println("Authorizator")
+			// Call User Business layer to verify if username exists
+			// If user name exists
+			//  return true
+			// Else
+			// return false
 			if v, ok := data.(*model.User); ok && v.UserName == "admin" || v.UserName == "kal" || v.UserName == "james" {
 				return true
 			}
@@ -74,6 +96,8 @@ func (m *goMiddleware) AuthMiddleware() *jwt.GinJWTMiddleware {
 			return false
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
+			// Called when we have invalid token
+			fmt.Println("Unauthorized")
 			c.JSON(code, gin.H{
 				"code":    code,
 				"message": message,
