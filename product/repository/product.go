@@ -18,6 +18,7 @@ func NewProductRepository(conn *sql.DB) product.ProductRepository {
 	return &productRepository{conn}
 }
 
+// Get all products with condition
 func (m *productRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*model.Product, error) {
 	fmt.Println("In Repo")
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
@@ -49,6 +50,7 @@ func (m *productRepository) fetch(ctx context.Context, query string, args ...int
 	return result, nil
 }
 
+// Get all products
 func (m *productRepository) Fetch(ctx context.Context) ([]*model.Product, error) {
 
 	query := `SELECT id,name,price,stock
@@ -58,6 +60,14 @@ func (m *productRepository) Fetch(ctx context.Context) ([]*model.Product, error)
 
 }
 
+//Get product with query
+func (m *productRepository) FetchProductWithQuery(ctx context.Context, query string) ([]*model.Product, error) {
+
+	return m.fetch(ctx, query)
+
+}
+
+//Add product
 func (m *productRepository) Store(ctx context.Context, a *model.Product) (int64, error) {
 
 	query := `INSERT INTO products (name,price,stock) VALUES(? , ? , ?)`
@@ -77,6 +87,7 @@ func (m *productRepository) Store(ctx context.Context, a *model.Product) (int64,
 	return res.LastInsertId()
 }
 
+// Delete product
 func (m *productRepository) Delete(ctx context.Context, id int) (bool, error) {
 	query := "DELETE FROM products WHERE id = ?"
 	fmt.Println("id:", id)

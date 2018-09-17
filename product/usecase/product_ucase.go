@@ -20,6 +20,7 @@ func NewProductUsecase(a product.ProductRepository, timeout time.Duration) produ
 	}
 }
 
+// Get Product
 func (a *productUsecase) Fetch(c context.Context) ([]*model.Product, error) {
 
 	ctx, cancel := context.WithTimeout(c, a.contextTimeout)
@@ -33,6 +34,7 @@ func (a *productUsecase) Fetch(c context.Context) ([]*model.Product, error) {
 	return listProduct, nil
 }
 
+// Save product
 func (a *productUsecase) Store(ctx context.Context, m *model.Product) (int64, error) {
 
 	ctx, cancel := context.WithTimeout(ctx, a.contextTimeout)
@@ -46,6 +48,7 @@ func (a *productUsecase) Store(ctx context.Context, m *model.Product) (int64, er
 	return id, nil
 }
 
+// Delete product
 func (a *productUsecase) Delete(c context.Context, id int) (bool, error) {
 	ctx, cancel := context.WithTimeout(c, a.contextTimeout)
 	defer cancel()

@@ -47,6 +47,7 @@ func NewProductHttpHandler(r *gin.Engine, us productUcase.ProductUsecase) {
 
 }
 
+// API for get product
 func (a *HttpProductHandler) Fetch(c *gin.Context) {
 
 	ctx := c
@@ -60,6 +61,8 @@ func (a *HttpProductHandler) Fetch(c *gin.Context) {
 	fmt.Println("In Fetch")
 	c.JSON(http.StatusOK, gin.H{"Products": listP})
 }
+
+// Validate request
 func isRequestValid(m *model.Product) (bool, error) {
 
 	validate := validator.New()
@@ -71,6 +74,7 @@ func isRequestValid(m *model.Product) (bool, error) {
 	return true, nil
 }
 
+// API for add product
 func (a *HttpProductHandler) Store(c *gin.Context) {
 	var product model.Product
 	err := c.BindJSON(&product)
@@ -91,6 +95,7 @@ func (a *HttpProductHandler) Store(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": pr})
 }
 
+// API for delete product
 func (a *HttpProductHandler) Delete(c *gin.Context) {
 	idP, err := strconv.Atoi(c.Query("id"))
 	id := int(idP)

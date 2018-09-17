@@ -24,7 +24,7 @@ func NewCartHttpHandler(r *gin.Engine, us promotionUcase.EUsecase) {
 	handler := &HttpCartHandler{
 		AUsecase: us,
 	}
-
+	// JWT auth
 	auth := r.Group("/auth")
 	authMiddleware := middleware.InitMiddleware().AuthMiddleware()
 	auth.Use(authMiddleware.MiddlewareFunc())
@@ -37,6 +37,7 @@ func NewCartHttpHandler(r *gin.Engine, us promotionUcase.EUsecase) {
 
 }
 
+//Get promotions
 func (a *HttpCartHandler) Fetch(c *gin.Context) {
 
 	ctx := c
@@ -51,6 +52,8 @@ func (a *HttpCartHandler) Fetch(c *gin.Context) {
 	fmt.Println("In Fetch")
 	c.JSON(http.StatusOK, gin.H{"Promotion": listC})
 }
+
+//Validate request
 func isRequestValid(m *model.Promotion) (bool, error) {
 
 	validate := validator.New()
@@ -62,6 +65,7 @@ func isRequestValid(m *model.Promotion) (bool, error) {
 	return true, nil
 }
 
+// Add new promotion item
 func (a *HttpCartHandler) Store(c *gin.Context) {
 	var promotion model.Promotion
 	err := c.BindJSON(&promotion)
@@ -85,6 +89,7 @@ func (a *HttpCartHandler) Store(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": pr})
 }
 
+// Delete API for promotion
 func (a *HttpCartHandler) Delete(c *gin.Context) {
 	idP, err := strconv.Atoi(c.Query("id"))
 	id := int(idP)

@@ -21,6 +21,7 @@ func NewEUsecase(a promotion.ERepository, timeout time.Duration) promotion.EUsec
 	}
 }
 
+// Fetch promotion item
 func (a *eUsecase) Fetch(c context.Context) ([]*model.Promotion, error) {
 
 	ctx, cancel := context.WithTimeout(c, a.contextTimeout)
@@ -34,6 +35,7 @@ func (a *eUsecase) Fetch(c context.Context) ([]*model.Promotion, error) {
 	return listent, nil
 }
 
+// Save promotion item
 func (a *eUsecase) Store(ctx context.Context, m *model.Promotion) (int64, error) {
 	fmt.Println("uc:", m)
 	ctx, cancel := context.WithTimeout(ctx, a.contextTimeout)
@@ -47,6 +49,7 @@ func (a *eUsecase) Store(ctx context.Context, m *model.Promotion) (int64, error)
 	return id, nil
 }
 
+// Delete promotion item
 func (a *eUsecase) Delete(c context.Context, id int) (bool, error) {
 	ctx, cancel := context.WithTimeout(c, a.contextTimeout)
 	defer cancel()

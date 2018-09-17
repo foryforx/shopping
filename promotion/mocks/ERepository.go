@@ -55,6 +55,29 @@ func (_m *ERepository) Fetch(ctx context.Context) ([]*model.Promotion, error) {
 	return r0, r1
 }
 
+// FetchPromotionwithQuery provides a mock function with given fields: ctx, query
+func (_m *ERepository) FetchPromotionwithQuery(ctx context.Context, query string) ([]*model.Promotion, error) {
+	ret := _m.Called(ctx, query)
+
+	var r0 []*model.Promotion
+	if rf, ok := ret.Get(0).(func(context.Context, string) []*model.Promotion); ok {
+		r0 = rf(ctx, query)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*model.Promotion)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, query)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Store provides a mock function with given fields: ctx, a
 func (_m *ERepository) Store(ctx context.Context, a *model.Promotion) (int64, error) {
 	ret := _m.Called(ctx, a)

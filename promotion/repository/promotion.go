@@ -5,8 +5,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/karuppaiah/shopping/model"
+	productRepo "github.com/karuppaiah/shopping/product/repository"
 	"github.com/karuppaiah/shopping/promotion"
 )
 
@@ -42,7 +44,7 @@ func (m *eRepository) fetch(ctx context.Context, query string, args ...interface
 			&t.Discount,
 			&t.Priority,
 		)
-
+		fmt.Println("prodid:", t.Sprodid)
 		if err != nil {
 
 			return nil, err
@@ -54,37 +56,37 @@ func (m *eRepository) fetch(ctx context.Context, query string, args ...interface
 	return result, nil
 }
 
-func (m *eRepository) fetchProduct(ctx context.Context, query string, args ...interface{}) ([]*model.Product, error) {
+// func (m *eRepository) fetchProduct(ctx context.Context, query string, args ...interface{}) ([]*model.Product, error) {
 
-	rows, err := m.Conn.QueryContext(ctx, query, args...)
+// 	rows, err := m.Conn.QueryContext(ctx, query, args...)
 
-	if err != nil {
+// 	if err != nil {
 
-		return nil, err
-	}
-	defer rows.Close()
-	result := make([]*model.Product, 0)
-	for rows.Next() {
-		t := new(model.Product)
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
+// 	result := make([]*model.Product, 0)
+// 	for rows.Next() {
+// 		t := new(model.Product)
 
-		err = rows.Scan(
-			&t.ID,
-			&t.Name,
-			&t.Price,
-			&t.Stock,
-		)
+// 		err = rows.Scan(
+// 			&t.ID,
+// 			&t.Name,
+// 			&t.Price,
+// 			&t.Stock,
+// 		)
 
-		if err != nil {
+// 		if err != nil {
 
-			return nil, err
-		}
+// 			return nil, err
+// 		}
 
-		result = append(result, t)
-	}
+// 		result = append(result, t)
+// 	}
 
-	return result, nil
-}
-
+// 	return result, nil
+// }
+// Fetch promotions
 func (m *eRepository) Fetch(ctx context.Context) ([]*model.Promotion, error) {
 
 	query := `SELECT id,sprodid,sminqty, dprodid,dminqty,disctype,discount,priority
@@ -93,11 +95,19 @@ func (m *eRepository) Fetch(ctx context.Context) ([]*model.Promotion, error) {
 
 }
 
-func (m *eRepository) Store(ctx context.Context, a *model.Promotion) (int64, error) {
+// Fetch promotion with query for other repository
+func (m *eRepository) FetchPromotionwithQuery(ctx context.Context, query string) ([]*model.Promotion, error) {
+	fmt.Println("Promotion Repo")
+	return m.fetch(ctx, query)
 
+}
+
+func (m *eRepository) Store(ctx context.Context, a *model.Promotion) (int64, error) {
+	prR := productRepo.NewProductRepository(m.Conn)
 	// Check source product
-	prodQuery := `SELECT id, name, price, stock FROM products where id = ?`
-	sprodItems, serr := m.fetchProduct(ctx, prodQuery, a.Sprodid)
+	prodQuery := "SELECT id, name, price, stock FROM products where id = '" + strconv.Itoa(a.Sprodid) + "'"
+	sprodItems, serr := prR.FetchProductWithQuery(ctx, prodQuery)
+	// sprodItems, serr := m.fetchProduct(ctx, prodQuery, a.Sprodid)
 
 	if serr != nil {
 		return 0, serr
@@ -109,8 +119,10 @@ func (m *eRepository) Store(ctx context.Context, a *model.Promotion) (int64, err
 	}
 	//Check destincation product
 	//dprodQuery := `SELECT id, name,price,stock FROM products where id = ?`
-	dprodItems, derr := m.fetchProduct(ctx, prodQuery, a.Dprodid)
+	// dprodItems, derr := m.fetchProduct(ctx, prodQuery, a.Dprodid)
+	prodQuery = "SELECT id, name, price, stock FROM products where id = '" + strconv.Itoa(a.Dprodid) + "'"
 
+	dprodItems, derr := prR.FetchProductWithQuery(ctx, prodQuery)
 	if derr != nil {
 		return 0, derr
 	}
@@ -119,7 +131,7 @@ func (m *eRepository) Store(ctx context.Context, a *model.Promotion) (int64, err
 		dlenErr := fmt.Errorf("DEstination Item doesnt exists")
 		return 0, dlenErr
 	}
-
+	// if promotion items is already available, return error
 	promotionExistQuery := `SELECT id, sprodid , sminqty , dprodid , dminqty , disctype , discount,priority
 	FROM promotions where sprodid = ? and dprodid = ?`
 	promtionItems, perr := m.fetch(ctx, promotionExistQuery, a.Sprodid, a.Dprodid)
@@ -133,7 +145,7 @@ func (m *eRepository) Store(ctx context.Context, a *model.Promotion) (int64, err
 		fmt.Println("Item already exists in promotion. Please delete and add again ")
 		return 0, errors.New("Item already exists in promotion. Please delete and add again ")
 	}
-
+	// add promotion item
 	query := `INSERT INTO promotions ( sprodid , sminqty , dprodid , dminqty , disctype , discount,priority ) VALUES ( ? , ? , ? , ? , ? , ? , ?)`
 
 	stmt, err := m.Conn.PrepareContext(ctx, query)
@@ -152,6 +164,7 @@ func (m *eRepository) Store(ctx context.Context, a *model.Promotion) (int64, err
 	return res.LastInsertId()
 }
 
+// Delete of promotion item
 func (m *eRepository) Delete(ctx context.Context, id int) (bool, error) {
 	query := "DELETE FROM promotions WHERE id = ?"
 

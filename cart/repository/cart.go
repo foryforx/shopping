@@ -5,10 +5,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/karuppaiah/shopping/cart"
 	"github.com/karuppaiah/shopping/model"
+	productRepo "github.com/karuppaiah/shopping/product/repository"
+	promotionRepo "github.com/karuppaiah/shopping/promotion/repository"
 )
 
 //eRepository with Connection to DB
@@ -58,72 +61,74 @@ func (m *eRepository) fetch(ctx context.Context, query string, args ...interface
 }
 
 // Fetch product for validations and return as list of product
-func (m *eRepository) fetchProduct(ctx context.Context, query string, args ...interface{}) ([]*model.Product, error) {
+// func (m *eRepository) fetchProduct(ctx context.Context, query string, args ...interface{}) ([]*model.Product, error) {
 
-	rows, err := m.Conn.QueryContext(ctx, query, args...)
+// 	rows, err := m.Conn.QueryContext(ctx, query, args...)
 
-	if err != nil {
+// 	if err != nil {
 
-		return nil, err
-	}
-	defer rows.Close()
-	result := make([]*model.Product, 0)
-	for rows.Next() {
-		t := new(model.Product)
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
+// 	result := make([]*model.Product, 0)
+// 	for rows.Next() {
+// 		t := new(model.Product)
 
-		err = rows.Scan(
-			&t.ID,
-			&t.Name,
-			&t.Price,
-			&t.Stock,
-		)
+// 		err = rows.Scan(
+// 			&t.ID,
+// 			&t.Name,
+// 			&t.Price,
+// 			&t.Stock,
+// 		)
 
-		if err != nil {
+// 		if err != nil {
 
-			return nil, err
-		}
+// 			return nil, err
+// 		}
 
-		result = append(result, t)
-	}
+// 		result = append(result, t)
+// 	}
 
-	return result, nil
-}
+// 	return result, nil
+// }
 
 // Fetch promotion for validation and calculation and return as list of promotion
-func (m *eRepository) fetchPromotion(ctx context.Context, query string, args ...interface{}) ([]*model.Promotion, error) {
+// func (m *eRepository) fetchPromotion(ctx context.Context, query string, args ...interface{}) ([]*model.Promotion, error) {
+// 	// prR := productRepo.NewProductRepository(m.Conn)
+// 	// poR := promotionRepo.NewERepository(m.Conn)
 
-	rows, err := m.Conn.QueryContext(ctx, query, args...)
+// 	rows, err := m.Conn.QueryContext(ctx, query, args...)
 
-	if err != nil {
+// 	if err != nil {
 
-		return nil, err
-	}
-	defer rows.Close()
-	result := make([]*model.Promotion, 0)
-	for rows.Next() {
-		t := new(model.Promotion)
+// 		return nil, err
+// 	}
+// 	defer rows.Close()
+// 	result := make([]*model.Promotion, 0)
+// 	for rows.Next() {
+// 		t := new(model.Promotion)
 
-		err = rows.Scan(
-			&t.ID,
-			&t.Sprodid,
-			&t.Sminqty,
-			&t.Dprodid,
-			&t.Dminqty,
-			&t.Disctype,
-			&t.Discount,
-			&t.Priority,
-		)
+// 		err = rows.Scan(
+// 			&t.ID,
+// 			&t.Sprodid,
+// 			&t.Sminqty,
+// 			&t.Dprodid,
+// 			&t.Dminqty,
+// 			&t.Disctype,
+// 			&t.Discount,
+// 			&t.Priority,
+// 		)
 
-		if err != nil {
+// 		if err != nil {
 
-			return nil, err
-		}
+// 			return nil, err
+// 		}
 
-		result = append(result, t)
-	}
+// 		result = append(result, t)
+// 	}
 
-	return result, nil
-}
+// 	return result, nil
+// }
 
 // Fetch cart items in list format for the user
 func (m *eRepository) Fetch(ctx context.Context, user string) ([]*model.Cart, error) {
@@ -152,8 +157,10 @@ func (m *eRepository) ConvertCartDetailsAsMap(ctx context.Context, user string) 
 
 // Get promotion detauls as list
 func (m *eRepository) FetchPromotionDetailsForCart(ctx context.Context, user string) ([]*model.Promotion, error) {
-	query := `SELECT id,sprodid,sminqty,dprodid,dminqty,disctype,discount,priority FROM promotions where sprodid in (select prodid from carts where code = ?) order by priority desc`
-	return m.fetchPromotion(ctx, query, user)
+	query := "SELECT id,sprodid,sminqty,dprodid,dminqty,disctype,discount,priority FROM promotions where sprodid in (select prodid from carts where code = '" + user + "') order by priority desc"
+	//query := `SELECT id,sprodid,sminqty,dprodid,dminqty,disctype,discount,priority FROM promotions order by priority desc`
+	poR := promotionRepo.NewERepository(m.Conn)
+	return poR.FetchPromotionwithQuery(ctx, query)
 }
 
 // //
@@ -223,9 +230,11 @@ func (m *eRepository) Update(ctx context.Context, ar *model.Cart) (*model.Cart, 
 
 // Add a new cart item
 func (m *eRepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
-
-	prodQuery := `SELECT id, name, price, stock FROM products where id = ?`
-	prodItems, err := m.fetchProduct(ctx, prodQuery, a.Prodid)
+	prR := productRepo.NewProductRepository(m.Conn)
+	fmt.Println(strconv.Itoa(a.Prodid))
+	prodQuery := "SELECT id, name, price, stock FROM products where id = '" + strconv.Itoa(a.Prodid) + "'"
+	prodItems, err := prR.FetchProductWithQuery(ctx, prodQuery)
+	// prodItems, err := m.fetchProduct(ctx, prodQuery, a.Prodid)
 
 	if err != nil {
 		return 0, err
