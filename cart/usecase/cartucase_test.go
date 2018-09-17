@@ -223,3 +223,80 @@ func TestGetCartTotalValue(t *testing.T) {
 	mockCartRepo.AssertExpectations(t)
 
 }
+
+func TestFetchReevaluateDiscount(t *testing.T) {
+	mockCartRepo := new(mocks.ERepository)
+	mockEnt1 := &model.Cart{
+		ID:     1,
+		Name:   "New Belt",
+		Price:  30,
+		Items:  20,
+		Prodid: 2,
+		Code:   "admin",
+		Dprice: 400,
+	}
+	mockEnt2 := &model.Cart{
+		ID:     2,
+		Name:   "New Belt",
+		Price:  100,
+		Items:  20,
+		Prodid: 3,
+		Code:   "admin",
+		Dprice: 0,
+	}
+	mockEnt3 := &model.Cart{
+		ID:     2,
+		Name:   "New Belt",
+		Price:  100,
+		Items:  20,
+		Prodid: 3,
+		Code:   "admin",
+		Dprice: 300,
+	}
+	mockEnt4 := &model.Cart{
+		ID:     1,
+		Name:   "New Belt",
+		Price:  30,
+		Items:  20,
+		Prodid: 2,
+		Code:   "admin",
+		Dprice: 0,
+	}
+	mockEntMap := map[int](*model.Cart){}
+	mockEntMap[2] = mockEnt1
+	mockEntMap[3] = mockEnt2
+	mockListCart := make([]*model.Cart, 0)
+	mockListCart = append(mockListCart, mockEnt1)
+	mockListCart = append(mockListCart, mockEnt2)
+
+	mockPromo1 := &model.Promotion{
+		ID:       1,
+		Sprodid:  2,
+		Sminqty:  2,
+		Dprodid:  3,
+		Dminqty:  0,
+		Disctype: "P",
+		Discount: 15,
+		Priority: 1,
+	}
+
+	mockListPromotion := make([]*model.Promotion, 0)
+	mockListPromotion = append(mockListPromotion, mockPromo1)
+
+	mockCartRepo.On("Fetch", mock.Anything, mock.Anything).Return(mockListCart, nil)
+	mockCartRepo.On("ConvertCartDetailsAsMap", mock.Anything, mock.Anything).Return(mockEntMap, nil)
+	mockCartRepo.On("FetchPromotionDetailsForCart", mock.Anything, mock.Anything).Return(mockListPromotion, nil)
+	mockCartRepo.On("Update", mock.Anything, mockEnt2).Return(mockEnt3, nil)
+	mockCartRepo.On("Update", mock.Anything, mockEnt1).Return(mockEnt4, nil)
+
+	u := usecase.NewEUsecase(mockCartRepo, time.Second*2)
+
+	mockCart, err := u.Fetch(context.TODO(), "admin")
+
+	assert.NoError(t, err)
+	assert.NotNil(t, mockCart)
+	assert.Equal(t, 300.0, mockEntMap[3].Dprice)
+	assert.Equal(t, float64(0), mockEntMap[2].Dprice)
+	mockCartRepo.AssertExpectations(t)
+
+}

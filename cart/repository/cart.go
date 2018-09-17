@@ -11,15 +11,18 @@ import (
 	"github.com/karuppaiah/shopping/model"
 )
 
+//eRepository with Connection to DB
 type eRepository struct {
 	Conn *sql.DB
 }
 
+// To create new Repository
 func NewERepository(conn *sql.DB) cart.ERepository {
 
 	return &eRepository{conn}
 }
 
+// Fetch cart item for arguments and return as list
 func (m *eRepository) fetch(ctx context.Context, query string, args ...interface{}) ([]*model.Cart, error) {
 
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
@@ -54,6 +57,7 @@ func (m *eRepository) fetch(ctx context.Context, query string, args ...interface
 	return result, nil
 }
 
+// Fetch product for validations and return as list of product
 func (m *eRepository) fetchProduct(ctx context.Context, query string, args ...interface{}) ([]*model.Product, error) {
 
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
@@ -85,6 +89,7 @@ func (m *eRepository) fetchProduct(ctx context.Context, query string, args ...in
 	return result, nil
 }
 
+// Fetch promotion for validation and calculation and return as list of promotion
 func (m *eRepository) fetchPromotion(ctx context.Context, query string, args ...interface{}) ([]*model.Promotion, error) {
 
 	rows, err := m.Conn.QueryContext(ctx, query, args...)
@@ -120,6 +125,7 @@ func (m *eRepository) fetchPromotion(ctx context.Context, query string, args ...
 	return result, nil
 }
 
+// Fetch cart items in list format for the user
 func (m *eRepository) Fetch(ctx context.Context, user string) ([]*model.Cart, error) {
 
 	query := `SELECT id,code,prodid, name,price,items,dprice
@@ -150,45 +156,46 @@ func (m *eRepository) FetchPromotionDetailsForCart(ctx context.Context, user str
 	return m.fetchPromotion(ctx, query, user)
 }
 
-// Move as BL
-func (m *eRepository) RefreshCart(ctx context.Context, user string) error {
-	mCart, err := m.ConvertCartDetailsAsMap(ctx, user)
-	fmt.Println("Refresh:", mCart)
-	if err != nil {
-		return err
-	}
-	lPromo, err := m.FetchPromotionDetailsForCart(ctx, user)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < len(lPromo); i++ {
-		fmt.Println(i, ".Source product id present:", mCart[lPromo[i].Sprodid])
-		sCartItem := mCart[lPromo[i].Sprodid]
-		dCartItem := mCart[lPromo[i].Dprodid]
-		fmt.Println("Source cart item:", sCartItem)
-		fmt.Println("Destination Cart items:", dCartItem)
+// //
+// func (m *eRepository) RefreshCart(ctx context.Context, user string) error {
+// 	mCart, err := m.ConvertCartDetailsAsMap(ctx, user)
+// 	fmt.Println("Refresh:", mCart)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	lPromo, err := m.FetchPromotionDetailsForCart(ctx, user)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for i := 0; i < len(lPromo); i++ {
+// 		fmt.Println(i, ".Source product id present:", mCart[lPromo[i].Sprodid])
+// 		sCartItem := mCart[lPromo[i].Sprodid]
+// 		dCartItem := mCart[lPromo[i].Dprodid]
+// 		fmt.Println("Source cart item:", sCartItem)
+// 		fmt.Println("Destination Cart items:", dCartItem)
 
-		if sCartItem.Items >= lPromo[i].Sminqty && dCartItem != nil {
-			fmt.Println("Promotion applicable")
-			noOfItemDiscApplied := 0
-			if dCartItem.Items > lPromo[i].Dminqty {
-				noOfItemDiscApplied = dCartItem.Items - lPromo[i].Dminqty
-				if lPromo[i].Disctype == "P" {
-					dCartItem.Dprice = ((lPromo[i].Discount / 100) * dCartItem.Price) * float64(noOfItemDiscApplied)
-				} else if lPromo[i].Disctype == "F" {
-					dCartItem.Dprice = (lPromo[i].Discount) * float64(noOfItemDiscApplied)
-				}
-				fmt.Println("Final cart item:", dCartItem)
-				m.Update(ctx, dCartItem)
-			}
+// 		if sCartItem.Items >= lPromo[i].Sminqty && dCartItem != nil {
+// 			fmt.Println("Promotion applicable")
+// 			noOfItemDiscApplied := 0
+// 			if dCartItem.Items > lPromo[i].Dminqty {
+// 				noOfItemDiscApplied = dCartItem.Items - lPromo[i].Dminqty
+// 				if lPromo[i].Disctype == "P" {
+// 					dCartItem.Dprice = ((lPromo[i].Discount / 100) * dCartItem.Price) * float64(noOfItemDiscApplied)
+// 				} else if lPromo[i].Disctype == "F" {
+// 					dCartItem.Dprice = (lPromo[i].Discount) * float64(noOfItemDiscApplied)
+// 				}
+// 				fmt.Println("Final cart item:", dCartItem)
+// 				m.Update(ctx, dCartItem)
+// 			}
 
-		}
+// 		}
 
-	}
-	return nil
-}
-
+// 	}
+// 	return nil
+// }
 //END move as BL
+
+// Update the cart items discount
 func (m *eRepository) Update(ctx context.Context, ar *model.Cart) (*model.Cart, error) {
 	query := `UPDATE carts set dprice = ? WHERE ID = ?`
 
@@ -214,6 +221,7 @@ func (m *eRepository) Update(ctx context.Context, ar *model.Cart) (*model.Cart, 
 	return ar, nil
 }
 
+// Add a new cart item
 func (m *eRepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
 
 	prodQuery := `SELECT id, name, price, stock FROM products where id = ?`
@@ -266,6 +274,7 @@ func (m *eRepository) Store(ctx context.Context, a *model.Cart) (int64, error) {
 	return res.LastInsertId()
 }
 
+// Delete a cart item
 func (m *eRepository) Delete(ctx context.Context, id int) (bool, error) {
 	query := "DELETE FROM carts WHERE id = ?"
 

@@ -35,6 +35,7 @@ This project has  4 Domain layer section :
  
  
  Architecture
+ Ecah model has this below structure(eg: Product, cart, promotion, User(Yet to be done))
  ![alt text](https://github.com/karuppaiah/shopping/blob/master/architecture.png)
  
 
