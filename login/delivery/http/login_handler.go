@@ -3,11 +3,10 @@ package http
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	jwt "github.com/appleboy/gin-jwt"
 	"github.com/gin-gonic/gin"
-	cartUcase "github.com/karuppaiah/shopping/cart"
+	loginUcase "github.com/karuppaiah/shopping/login"
 	"github.com/karuppaiah/shopping/middleware"
 	"github.com/karuppaiah/shopping/model"
 	validator "gopkg.in/go-playground/validator.v9"
@@ -17,51 +16,51 @@ type ResponseError struct {
 	Message string `json:"message"`
 }
 
-// API struct with business logic
 type HttpCartHandler struct {
-	AUsecase cartUcase.EUsecase
+	AUsecase loginUcase.EUsecase
 }
 
-// To create new API handler with business logic
-func NewCartHttpHandler(r *gin.Engine, us cartUcase.EUsecase) {
+func NewLoginHttpHandler(r *gin.Engine, us loginUcase.EUsecase) {
 	handler := &HttpCartHandler{
 		AUsecase: us,
 	}
-	// Authentication using JWT
+	// JWT auth
 	auth := r.Group("/auth")
 	authMiddleware := middleware.InitMiddleware().AuthMiddleware()
 	auth.Use(authMiddleware.MiddlewareFunc())
 	{
-		auth.GET("/cart", handler.Fetch)
-		auth.POST("/cart", handler.Store)
-		auth.DELETE("/cart", handler.Delete)
+		auth.GET("/login", handler.Fetch)
+		auth.POST("/login", handler.Store)
+		auth.DELETE("/login", handler.Delete)
 
 	}
 
 }
 
-// Get cart item for user
+//Get logins
 func (a *HttpCartHandler) Fetch(c *gin.Context) {
 
 	ctx := c
-	fmt.Println("In Fetch")
 	claims := jwt.ExtractClaims(c)
 	// fmt.Println("user:", claims["id"].(string))
 	user := claims["id"].(string)
-	listC, err := a.AUsecase.Fetch(ctx, user)
-	total := a.AUsecase.GetTotalCartValue(listC)
-	fmt.Println(listC)
-	fmt.Println("In Fetch")
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+	if user != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthenticated user"})
 		return
 	}
-	fmt.Println("In Fetch")
-	c.JSON(http.StatusOK, gin.H{"Cart": listC, "Total": total})
+	getUsername := c.Query("username")
+	listC, err := a.AUsecase.Fetch(ctx, getUsername)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"Login": listC})
 }
 
-// Validate request
-func isRequestValid(m *model.Cart) (bool, error) {
+//Validate request
+func isRequestValid(m *model.Login) (bool, error) {
 
 	validate := validator.New()
 
@@ -72,29 +71,31 @@ func isRequestValid(m *model.Cart) (bool, error) {
 	return true, nil
 }
 
-// Add a new cart item to user
+// Add new login item
 func (a *HttpCartHandler) Store(c *gin.Context) {
-	var cart model.Cart
-	err := c.BindJSON(&cart)
 	claims := jwt.ExtractClaims(c)
 	// fmt.Println("user:", claims["id"].(string))
 	user := claims["id"].(string)
-	cart.Code = user
-	// Binding error
+	if user != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthenticated user"})
+		return
+	}
+	var login model.Login
+	err := c.BindJSON(&login)
+
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		return
 	}
-	// Validate request
-	if ok, err := isRequestValid(&cart); !ok {
+
+	if ok, err := isRequestValid(&login); !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	ctx := c
-	fmt.Println("Cart:", cart)
-	// Call business logic
-	pr, err := a.AUsecase.Store(ctx, &cart)
-	// Handle error from business logic
+	fmt.Println("Login:", login)
+	pr, err := a.AUsecase.Store(ctx, &login)
+
 	if err != nil {
 		fmt.Println("handler error:" + err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
@@ -104,14 +105,20 @@ func (a *HttpCartHandler) Store(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": pr})
 }
 
-// Delete a cart item
-// TODO : verify whether user and id are matching with request value
+// Delete API for login
 func (a *HttpCartHandler) Delete(c *gin.Context) {
-	idP, err := strconv.Atoi(c.Query("id"))
-	id := int(idP)
+	claims := jwt.ExtractClaims(c)
+	// fmt.Println("user:", claims["id"].(string))
+	user := claims["id"].(string)
+	if user != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthenticated user"})
+		return
+	}
+	idP := c.Query("username")
+
 	ctx := c
 
-	_, err = a.AUsecase.Delete(ctx, id)
+	_, err := a.AUsecase.Delete(ctx, idP)
 
 	if err != nil {
 

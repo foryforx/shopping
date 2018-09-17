@@ -57,6 +57,7 @@ func (a *HttpProductHandler) Fetch(c *gin.Context) {
 	fmt.Println("In Fetch")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		return
 	}
 	fmt.Println("In Fetch")
 	c.JSON(http.StatusOK, gin.H{"Products": listP})
@@ -80,10 +81,12 @@ func (a *HttpProductHandler) Store(c *gin.Context) {
 	err := c.BindJSON(&product)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
 	}
 
 	if ok, err := isRequestValid(&product); !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	ctx := c
 	fmt.Println("Product:", product)
@@ -91,6 +94,7 @@ func (a *HttpProductHandler) Store(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"success": pr})
 }
@@ -106,6 +110,7 @@ func (a *HttpProductHandler) Delete(c *gin.Context) {
 	if err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": "OK"})
 }

@@ -20,7 +20,7 @@ type HttpCartHandler struct {
 	AUsecase promotionUcase.EUsecase
 }
 
-func NewCartHttpHandler(r *gin.Engine, us promotionUcase.EUsecase) {
+func NewPromotionHttpHandler(r *gin.Engine, us promotionUcase.EUsecase) {
 	handler := &HttpCartHandler{
 		AUsecase: us,
 	}
@@ -48,6 +48,7 @@ func (a *HttpCartHandler) Fetch(c *gin.Context) {
 	fmt.Println("In Fetch")
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		return
 	}
 	fmt.Println("In Fetch")
 	c.JSON(http.StatusOK, gin.H{"Promotion": listC})
@@ -72,10 +73,12 @@ func (a *HttpCartHandler) Store(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
+		return
 	}
 
 	if ok, err := isRequestValid(&promotion); !ok {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	ctx := c
 	fmt.Println("Promotion:", promotion)
@@ -84,6 +87,7 @@ func (a *HttpCartHandler) Store(c *gin.Context) {
 	if err != nil {
 		fmt.Println("handler error:" + err.Error())
 		c.JSON(http.StatusBadRequest, err.Error())
+		return
 
 	}
 	c.JSON(http.StatusOK, gin.H{"success": pr})
@@ -100,6 +104,7 @@ func (a *HttpCartHandler) Delete(c *gin.Context) {
 	if err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": "OK"})
 }

@@ -21,6 +21,10 @@ import (
 	promotionHttpDeliver "github.com/karuppaiah/shopping/promotion/delivery/http"
 	promotionRepo "github.com/karuppaiah/shopping/promotion/repository"
 	promotionUcase "github.com/karuppaiah/shopping/promotion/usecase"
+
+	loginHttpDeliver "github.com/karuppaiah/shopping/login/delivery/http"
+	loginRepo "github.com/karuppaiah/shopping/login/repository"
+	loginUcase "github.com/karuppaiah/shopping/login/usecase"
 	// gin-swagger middleware
 	// swagger embed files
 )
@@ -95,7 +99,11 @@ func main() {
 
 	poR := promotionRepo.NewERepository(db.SDB)
 	pou := promotionUcase.NewEUsecase(poR, timeoutContext)
-	promotionHttpDeliver.NewCartHttpHandler(r, pou)
+	promotionHttpDeliver.NewPromotionHttpHandler(r, pou)
+
+	loR := loginRepo.NewERepository(db.SDB)
+	loU := loginUcase.NewEUsecase(loR, timeoutContext)
+	loginHttpDeliver.NewLoginHttpHandler(r, loU)
 
 	r.Run(":8080")
 }

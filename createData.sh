@@ -49,4 +49,15 @@ curl -i -X DELETE  -H "Authorization:Bearer $TOKEN" http://localhost:8080/auth/p
 curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/promotion
 
 
+TOKEN=$(curl -X POST -F username=admin -F password=admin http://localhost:8080/login| awk -v  x=1 '{print $x}'| awk -F ":" '{print $7}'| awk -F '"' '{print $2}')
+# # GET Login
+curl -i -X GET -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN" http://127.0.0.1:8080/auth/login?username=kal
+# # ADD login 
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"username\": \"admin\", \"password\": \"admin\" }" http://localhost:8080/auth/login
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"username\": \"kal\", \"password\": \"kal\" }" http://localhost:8080/auth/login
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"username\": \"james\", \"password\": \"james\" }" http://localhost:8080/auth/login
+curl -i -X POST -H "Content-Type: application/json" -H "Authorization:Bearer $TOKEN"  -d "{ \"username\": \"del\", \"password\": \"del\" }" http://localhost:8080/auth/login
+
+# # DEL login
+curl -i -X DELETE  -H "Authorization:Bearer $TOKEN" http://localhost:8080/auth/login?username=del
 

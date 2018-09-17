@@ -54,10 +54,12 @@ func initDb() *gorm.DB {
 		db.CreateTable(&Product{})
 		db.CreateTable(&Cart{})
 		db.CreateTable(&Promotion{})
+		db.CreateTable(&Login{})
 
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&Product{})
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&Cart{})
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&Promotion{})
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&Login{})
 
 	}
 	return db
