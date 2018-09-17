@@ -105,7 +105,7 @@ docker run -p 8080:8080 --name kalshopping karups289/kal_shopping:1.0
  * EXECUTION SCRIPT FOR THIS APPLICATION
  * FEW CONFIGS ARE HARDCODED FOR NOW(CAN BE FETCHED FROM ENV. VARIABLES)
  * PERFORMANCE TESTING - 
- https://github.com/karuppaiah/shopping/blob/master/performance_testing.png
+ ![alt text](https://github.com/karuppaiah/shopping/blob/master/performance_testing.png)
  
 
 # TODO :
