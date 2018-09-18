@@ -57,7 +57,7 @@ sh execute.sh
 # Data populate and setup DB
 sh createData.sh
 
-At this time, you will have a new data.db created in root directory. Change the DB if needed.
+At this time, you will have a new data.db created in root directory. 
 
 Site runs at http://127.0.0.1:8080/ping
 
